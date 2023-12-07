@@ -1,0 +1,86 @@
+Hosting Dynamic website in aws using only EC2
+
+**Create new EC2 instance**
+Name - webserver
+AMI - ubuntu
+//optional // keypair
+create keypair - 
+select RSA and .pem
+Network settings -
+Allow ssh, HHTPS, HTTP
+Launch Instance
+*********
+    1  sudo apt-get update
+    2  sudo apt-get install apache2 libapache2-mod-php php php-mysql mysql-server mysql-client
+    3  sudo systemctl status apache2
+    5  cd /var/www/html
+    6  ls
+    7  cd .. (not in any folder)
+    8  git clone https://github.com/sreepathysois/phpmysql-app.git
+    9  ls
+   10  cd phpmysql-app/
+   11  ls
+   12  cd php
+   13  ls
+   14  cd online-shopping-system/ 
+   // 18  cd phpmysql-app/ 
+   19  cd 
+   24  sudo mkdir /var/www/html/ecommerce 
+   
+   25  cd phpmysql-app/
+   26  ls
+   27  cd php
+   28  ls
+   29  cd online-shopping-system/
+   
+   30  sudo cp -rf * /var/www/html/ecommerce
+   //31  sudo vi /etc/apache2
+   //32  sudo vi /etc/apache2/mods-enabled/dir.conf
+   //33  ls
+   //34  cd /var/www/html/
+   //35  ls
+   //36  sudo cp -rf ecommerce /var/www/html/
+   //37  ls
+   38  sudo nano /etc/apache2/sites-available/000-default.conf 
+   38  //Inside nano//document root /var/www/html/ecommerce
+   39  sudo systemctl restart apache2
+   40  sudo systemctl status mysql
+   //41  cd
+   //42  ls
+   
+   43  sudo mysql -u root -p (to connect to database)
+   
+   ***Database****
+   show databases;
+   create database ecommerce;
+   show databases;
+   create user 'msis'@'localhost' identified with mysql_native_password by 'sois@123';
+   grant all privileges on ecommerce.* to 'msis'@'localhost';
+   use ecommerce;
+   show tables;
+   exit
+   
+   ***continue***
+   44  cd /var/www/html/ecommerce/database/
+   45  ls
+   46  sudo mysql -u msis -p
+   ***Database****
+   show databases;
+   use ecommerce;
+   show tables;
+   source onlineshop.sql;
+   show tables;
+   select * from admin_info;
+   select * from from brands;
+   exit
+   
+   ***continue***
+   //47  cd -
+   48  cd /var/www/html/ecommerce/
+   49  sudo nano db.php
+       servername - localhost
+       username - msis
+       password - sois@123
+       db - ecommerce
+   50  sudo systemctl restart apache2
+   Browser - public Ipaddress
