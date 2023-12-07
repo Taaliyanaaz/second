@@ -1,0 +1,58 @@
+#####connect to EC2
+ssh -i "mykey1.pem" ubuntu@ec2-44-201-139-5.compute-1.amazonaws.com
+
+
+#####install packages
+sudo apt-get update
+sudo apt-get install apache2 libapache2-mod-php php php-mysql mysql-client
+
+
+#### Comeback to YOUR system and copy Website file to EC2
+scp -i Downloads/mykey1.pem -r myapp/phpmysql-app/php/online-shopping-system/ ubuntu@ec2-44-201-139-5.compute-1.amazonaws.com:/home/ubuntu/
+
+##### Go to EC2 instance
+
+#####copy file form home to var-www-html 
+sudo cp -r online-shopping-system/ /var/www/html/
+
+
+##### change document root in this file
+sudo vi /etc/apache2/sites-available/000-default.conf
+
+
+##### restart apache2 we'll get only front end without database content
+sudo service apache2 start
+sudo service apache2 restart
+
+
+#### Set DB Host value as endpoint of RDS instance here
+#### set DBName username password here (username and password is what you set during creation of RDS instance)
+sudo vi /var/www/html/online-shopping-system/db.php
+
+
+#### goto folder where .sql file is present
+cd /var/www/html/online-shopping-system/database
+
+
+#### Log into RDS from EC2
+sudo mysql -h webdb.cerwymyryywo.us-east-1.rds.amazonaws.com -u admin -p
+		(above is RDS instance endpoint)
+
+####INSIDE RDS
+create database ecom;
+use database ecom;
+source onlineshop.sql;
+
+exit
+
+
+#### restart apache in EC2
+sudo service apache2 restart
+
+
+#### copy public IP of EC2 and paste in browser to get the website
+
+
+
+
+
